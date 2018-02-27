@@ -1,0 +1,16 @@
+<openerp>
+    <data>
+        <record model = "Cours" id="cours1">
+            <field name="titre" >Analyse numerique</field>
+            <field name="description">Cours d'analyse numerique pour debutant</field>
+        </record>
+        <record model = "Cours" id="cours2">
+            <field name="titre" >Psychologie</field>
+            <field name="description">Cours de psychologie pour passione</field>
+        </record>
+        <record model = "Cours" id="cours3">
+            <field name="titre" >JEE</field>
+            <field name="description">Cours de JEE pour developpeurs</field>
+        </record>
+    </data>
+</openerp>
