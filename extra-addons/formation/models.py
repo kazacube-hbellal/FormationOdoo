@@ -5,6 +5,7 @@ from openerp import models, fields
 
 class Cours(models.Model):
     _name = 'formation.cours'
+    _rec_name = 'titre'
 
     titre = fields.Char(required=True)
 
@@ -27,9 +28,12 @@ class Session(models.Model):
 
     nbPlaces = fields.Integer(string="Nombres de places")
 
-    instructeur_id = fields.Many2one('res.partners', ondelete='set null',
+    instructeur_id = fields.Many2one('res.partner', ondelete='set null',
                                      string="Instructeur", index=True)
 
     cours_id = fields.Many2one('formation.cours',
         ondelete='cascade', string="Cours", required=True)
+
+    participant_ids = fields.Many2many('res.partner',string="Participants")
+
 

@@ -74,6 +74,7 @@
                 <form string="Formulaire du cours">
                     <sheet>
                         <group>
+                            <field name="id" invisible="1" />
                             <field name="titre"/>
                             <field name="responsable_id"/>
                         </group>
@@ -81,7 +82,7 @@
                             <page string="Description">
                                 <field name="description"/>
                             </page>
-                            <page string="Sessions">
+                            <page attrs="{'invisible': [('id', '=', False)]}" string="Sessions">
                                 <field name="session_ids">
                                     <tree string="Session Enregistrees">
                                         <field name="nom"/>
@@ -125,6 +126,8 @@
                                 <field name="nbPlaces"/>
                             </group>
                         </group>
+                        <label for="participant_ids"/>
+                        <field name="participant_ids"/>
                     </sheet>
                 </form>
             </field>
