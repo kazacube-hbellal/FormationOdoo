@@ -103,6 +103,7 @@
                 <tree string="Sessions">
                     <field name="nom"/>
                     <field name="cours_id"/>
+                    <field name="places_occupees" widget="progressbar"/>
                 </tree>
             </field>
         </record>
@@ -119,11 +120,13 @@
                                 <field name="cours_id"/>
                                 <field name="nom"/>
                                 <field name="instructeur_id"/>
+                                <field name="active"/>
                             </group>
                             <group string="Programme">
                                 <field name="dateDebut"/>
                                 <field name="duree"/>
                                 <field name="nbPlaces"/>
+                                <field name="places_occupees" widget="progressbar"/>
                             </group>
                         </group>
                         <label for="participant_ids"/>
