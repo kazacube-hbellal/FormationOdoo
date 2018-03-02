@@ -125,6 +125,7 @@
                             <group string="Programme">
                                 <field name="dateDebut"/>
                                 <field name="duree"/>
+                                <field name="dateFin"/>
                                 <field name="nbPlaces"/>
                                 <field name="places_occupees" widget="progressbar"/>
                             </group>

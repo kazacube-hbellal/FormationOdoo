@@ -4,6 +4,8 @@ from openerp import models, fields
 
 from openerp import api
 
+from datetime import datetime, timedelta
+
 
 class Cours(models.Model):
     _name = 'formation.cours'
@@ -21,12 +23,15 @@ class Cours(models.Model):
 
 class Session(models.Model):
     _name = 'formation.session'
+    _rec_name = 'nom'
 
     nom = fields.Char(required=True)
 
-    dateDebut = fields.Date(default=fields.Date.today)
+    dateDebut = fields.Date(string="Date de debut",default=fields.Date.today)
 
     duree = fields.Float(digits=(6,2), help ="Duree en jours")
+
+    dateFin = fields.Date(string="Date de fin")
 
     nbPlaces = fields.Integer(string="Nombres de places")
 
@@ -43,6 +48,23 @@ class Session(models.Model):
 
     places_occupees = fields.Float(string="Places occupees", compute='_places_occupees')
 
+    @api.onchange('duree')
+    def _set_dateFin(self):
+        fmt = '%Y-%m-%d'
+        dateDebut = datetime.strptime(self.dateDebut,fmt)
+        duree = int(self.duree)
+        dateFin = dateDebut + timedelta(days=duree)
+        self.dateFin = str(dateFin)
+
+    @api.onchange('dateFin','dateDebut')
+    def _set_Duree(self):
+        fmt = '%Y-%m-%d'
+        dateDebut = datetime.strptime(self.dateDebut,fmt)
+        dateFin = datetime.strptime(self.dateFin,fmt)
+        duree = str((dateFin-dateDebut).days)
+        self.duree = float(duree)
+
+
     @api.depends('nbPlaces', 'participant_ids')
     def _places_occupees(self):
         for r in self:
@@ -50,4 +72,21 @@ class Session(models.Model):
                 r.places_occupees = 0.0
             else:
                 r.places_occupees = 100.0 * len(r.participant_ids) / r.nbPlaces
+
+    @api.onchange('nbPlaces', 'participant_ids')
+    def _verifier_places_valides(self):
+        if self.nbPlaces < 0:
+            return {
+                'warning': {
+                    'title': "Nombre de places incorrect",
+                    'message': "Le nombre de places ne peut etre inferieur a zero",
+                },
+            }
+        if self.nbPlaces < len(self.participant_ids):
+            return {
+                'warning': {
+                    'title': "Trop de participants",
+                    'message': "Augmentez le nombre de places ou supprimer des participants",
+                },
+            }
 
