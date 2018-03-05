@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields
-
-from openerp import api
+from openerp import models, fields, api, exceptions
 
 from datetime import datetime, timedelta
 
@@ -19,6 +17,18 @@ class Cours(models.Model):
                                      string="Responsable", index=True)
 
     session_ids = fields.One2many('formation.session','cours_id', string = "Sessions")
+
+
+    _sql_constraints = [
+        ('titre_description_check',
+         'CHECK(titre != description)',
+         "Le titre d'un cours ne doit pas etre le meme que la description donnee"),
+
+        ('name_unique',
+         'UNIQUE(titre)',
+         "Le titre d'un cours doit etre unique"),
+    ]
+
 
 
 class Session(models.Model):
@@ -47,6 +57,19 @@ class Session(models.Model):
     participant_ids = fields.Many2many('res.partner',string="Participants")
 
     places_occupees = fields.Float(string="Places occupees", compute='_places_occupees')
+
+
+
+    @api.constrains('instructeur_id', 'participant_ids')
+    def _check_if_instructor_in_participants(self):
+        for r in self:
+            if r.instructeur_id and r.instructeur_id in r.participant_ids:
+                raise exceptions.ValidationError("L'instructeur d'une session ne peut etre"
+                                                 " un participant aussi")
+
+    """@api.onchange('instructeur_id', 'participant_ids')
+    def _check_if_instructor_in_participants_on_change(self):
+        check_if_instructor_in_participants(self)"""
 
     @api.onchange('duree')
     def _set_dateFin(self):
