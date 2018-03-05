@@ -100,10 +100,11 @@
             <field name="name">session.list</field>
             <field name="model">formation.session</field>
             <field name="arch" type="xml">
-                <tree string="Sessions">
+                <tree string="Sessions" colors="blue:duree&lt;5;red:duree&gt;15">
                     <field name="nom"/>
                     <field name="cours_id"/>
                     <field name="places_occupees" widget="progressbar"/>
+                    <field name="duree" invisible="True"/>
                 </tree>
             </field>
         </record>
