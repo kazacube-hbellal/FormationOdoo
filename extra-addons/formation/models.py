@@ -43,9 +43,14 @@ class Session(models.Model):
 
     dateFin = fields.Date(string="Date de fin")
 
+    heures = fields.Float(string="Duree en heures",
+                         compute='_get_heures', inverse='_set_heures')
+
     nbPlaces = fields.Integer(string="Nombres de places")
 
     active = fields.Boolean(default=True)
+
+    color = fields.Integer()
 
     instructeur_id = fields.Many2one('res.partner', ondelete='set null',
                                      string="Instructeur", index=True,
@@ -58,7 +63,35 @@ class Session(models.Model):
 
     places_occupees = fields.Float(string="Places occupees", compute='_places_occupees')
 
+    nbParticipants = fields.Integer(string="Nombre de participants", compute='_nb_participants',
+                                    store = True)
 
+    state = fields.Selection([
+        ('brouillon', "Brouillon"),
+        ('confirme', "Confirmé"),
+        ('termine', "Terminé"),
+    ], default='brouillon')
+
+    @api.multi
+    def action_brouillon(self):
+        self.state = 'brouillon'
+
+    @api.multi
+    def action_confirmer(self):
+        self.state = 'confirme'
+
+    @api.multi
+    def action_terminer(self):
+        self.state = 'termine'
+
+    @api.depends('duree')
+    def _get_heures(self):
+        for r in self:
+            r.heures = r.duree * 24
+
+    def _set_heures(self):
+        for r in self:
+            r.duree = r.heures / 24
 
     @api.constrains('instructeur_id', 'participant_ids')
     def _check_if_instructor_in_participants(self):
@@ -86,6 +119,11 @@ class Session(models.Model):
         dateFin = datetime.strptime(self.dateFin,fmt)
         duree = str((dateFin-dateDebut).days)
         self.duree = float(duree)
+
+    @api.depends('participant_ids')
+    def _nb_participants(self):
+        for r in self:
+            r.nbParticipants = len(r.participant_ids)
 
 
     @api.depends('nbPlaces', 'participant_ids')
