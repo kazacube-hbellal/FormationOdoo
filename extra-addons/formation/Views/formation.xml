@@ -6,12 +6,12 @@
             that is an action opening a view or a set of views
         -->
 
-        <record model="ir.actions.act_window" id="course_list_action">
+        <record model="ir.actions.act_window" id="cours_list_action">
             <field name="name">Cours</field>
             <field name="res_model">formation.cours</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context" eval="{'search_default_my_courses': 1}"/>
+            <field name="context" eval="{'search_default_mes_cours': 1}"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Creer le premier cours
                 </p>
@@ -28,7 +28,7 @@
              its parent openacademy_menu and *after* its
              action course_list_action -->
         <menuitem id="courses_menu" name="Cours" parent="openacademy_menu"
-                  action="course_list_action"/>
+                  action="cours_list_action"/>
 
         <record model="ir.actions.act_window" id="session_list_action">
             <field name="name">Sessions</field>
@@ -65,7 +65,7 @@
                     <field name="description"/>
                     <field name="responsable_id" invisible="True"/>
                     <filter name="mes_cours" string="Mes Cours"
-                            domain="[('responsable_id', '=', uid)]"/>
+                            domain="[('responsable_id', '=', uid)]" default="True"/>
                     <group string="Group By">
                         <filter name="by_responsable" string="Responsable"
                                 context="{'group_by': 'responsable_id'}"/>
@@ -241,8 +241,32 @@
                 </kanban>
             </field>
         </record>
+        <record model="ir.ui.view" id="wizard_form_view">
+            <field name="name">wizard.form</field>
+            <field name="model">formation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Ajouter des participants">
+                    <group>
+                        <field name="session_ids"/>
+                        <field name="participant_ids"/>
+                    </group>
+                    <footer>
+                        <button name="inscription" type="object"
+                                string="S'inscrire" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Annuler"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
 
-
+        <act_window id="launch_session_wizard"
+                    name="Ajouter des participants"
+                    src_model="formation.session"
+                    res_model="formation.wizard"
+                    view_mode="form"
+                    target="new"
+                    key2="client_action_multi"/>
 
     </data>
 </openerp>

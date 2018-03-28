@@ -1,0 +1,30 @@
+<openerp>
+<data>
+    <report
+        id="report_session"
+        model="formation.session"
+        string="Rapport de la session"
+        name="formation.report_session_view"
+        file="formation.report_session"
+        report_type="qweb-pdf" />
+
+    <template id="report_session_view">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <h2 t-field="doc.nom"/>
+                        <p>Du <span t-field="doc.dateDebut"/> au <span t-field="doc.dateFin"/></p>
+                        <h3>Participants:</h3>
+                        <ul>
+                            <t t-foreach="doc.participant_ids" t-as="participant">
+                                <li><span t-field="participant.name"/></li>
+                            </t>
+                        </ul>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</data>
+</openerp>

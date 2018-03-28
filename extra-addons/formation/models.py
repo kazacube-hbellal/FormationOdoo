@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api, exceptions
+from openerp import models, fields, api, exceptions, _
 
 from datetime import datetime, timedelta
 
@@ -28,6 +28,8 @@ class Cours(models.Model):
          'UNIQUE(titre)',
          "Le titre d'un cours doit etre unique"),
     ]
+
+
 
 
 

@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_formation_formation,formation.formation,model_formation_formation,,1,0,0,0
+manager_cours,manager cours,model_formation_cours,group_manager,1,1,1,1
+manager_sessions,manager sessions,model_formation_session,group_manager,1,1,1,1
+lecture_cours_tous,cours tous,model_formation_cours,,1,0,0,0
+lecture_sessions_tous,sessions tous,model_formation_session,,1,0,0,0
